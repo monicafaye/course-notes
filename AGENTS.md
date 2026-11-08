@@ -3,19 +3,22 @@
 This repository is a multi-course Typst note-taking and textbook-synthesis workspace. Whenever the user provides course slides or asks to create/update course notes, strictly follow these architectural and pedagogical rules.
 
 ## 1. Repository Architecture
-- **Shared Template**: [`/templates/course-note.typ`](./templates/course-note.typ) provides the Modern Academic / Textbook styling, dual-compilation wrappers (`course-book` and `lecture`), pedagogical callout boxes, and native Typst diagram primitives.
+- **Shared Template**: [`/templates/course-note.typ`](./templates/course-note.typ) provides the Modern Academic / Textbook styling, dual-compilation wrappers (`course-book` and `lecture`), exam-prep wrappers (`cheatsheet` and `exam-paper`), pedagogical callout boxes, and native Typst diagram primitives.
 - **Per-Course Repository Layout** (each course folder is named strictly by its `<course-code>` and functions as its own standalone Git repository, gitignored by the root tooling repo):
   ```text
   courses/<course-code>/
-  ├── README.md                # Public course overview, lecture table, and PDF links
-  ├── .gitignore               # Ignores slides/* and editor temp files
+  ├── README.md                # Public course overview, lecture/exam tables, and PDF links
+  ├── .gitignore               # Ignores slides/*, raw-exams/*, and editor temp files
   ├── main.typ                 # Master course book compendium (includes all lectures)
-  ├── slides/                  # Raw slide decks (.pdf, .pptx) — gitignored
+  ├── slides/                  # Raw slide decks & raw past exams (.pdf, .pptx) — gitignored
   ├── lectures/                # Modular per-lecture Typst files (01-topic.typ, 02-topic.typ)
+  ├── exams/                   # Cheat sheets & practice/past exam Typst files (tracked)
   └── build/                   # Compiled PDF outputs (tracked in the course Git repo)
       ├── <course-code>-book.pdf
-      └── lectures/
-          └── 01-topic.pdf
+      ├── lectures/
+      │   └── 01-topic.pdf
+      └── exams/
+          └── midterm-cheatsheet.pdf
   ```
 - **Dual Compilation Requirement**:
   Every lecture `.typ` file in `courses/<course-code>/lectures/` MUST compile standalone AND be `#include`d in `courses/<course-code>/main.typ`. Always compile from the repository root using `typst compile --root .`:

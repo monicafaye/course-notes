@@ -23,8 +23,9 @@ course-notes/                            # Root Tooling Repository
 ├── AGENTS.md                            # Workspace rules for AI slide-to-notes synthesis
 ├── .agents/
 │   └── skills/
-│       └── slide-to-notes/
-│           └── SKILL.md                 # Step-by-step runbook for converting slides to Typst
+│       ├── slide-to-notes/              # Convert raw lecture slides into Typst notes & books
+│       ├── exam-prep/                   # Generate 2-column cheat sheets & 2-part practice exams
+│       └── course-repo-manager/         # Scaffold courses, sync READMEs & publish to GitHub
 ├── templates/
 │   └── course-note.typ                  # Shared template, wrappers, callouts & diagram primitives
 └── courses/
@@ -42,9 +43,10 @@ course-notes/                            # Root Tooling Repository
         ├── README.md                    # Public course index & PDF links
         ├── .gitignore                   # Ignores raw slide decks (slides/*)
         ├── main.typ                     # Master course book entry point
-        ├── slides/                      # Raw slide decks (.pdf, .pptx) — gitignored
+        ├── slides/                      # Raw slide decks & raw past exams — gitignored
         ├── lectures/                    # Modular per-lecture Typst sources
-        └── build/                       # Compiled PDF outputs (book + standalone lectures)
+        ├── exams/                       # Cheat sheets & practice exam Typst sources
+        └── build/                       # Compiled PDF outputs (book, lectures, exams)
 ```
 
 ---
@@ -110,6 +112,10 @@ typst compile --root . courses/<course-code>/main.typ courses/<course-code>/buil
   Used at the top of each file in `lectures/XX-topic.typ`. Renders a standalone lecture document when compiled directly, or a numbered chapter when included inside `main.typ`.
 - **`#show: course-book.with(course-code: "...", course-name: "...", subtitle: "...")`**
   Used in `main.typ` before `#include`ing each lecture file. Generates the book title, table of contents, and chapter-prefixed section numbering (`1.1`, `1.2`, `2.1`, etc.).
+- **`#show: cheatsheet.with(course-code: "...", course-name: "...", title: "...", cols: 2)`**
+  Used in `exams/*-cheatsheet.typ` (paired with `#cheat-card(title: "...")[...]`) to generate compact 2-column formula & concept reference sheets.
+- **`#show: exam-paper.with(course-code: "...", course-name: "...", title: "...", subtitle: "...")`**
+  Used in `exams/*.typ` (paired with `#problem(number: 1, title: "...", points: 15)[...]` and `#solution(number: 1, title: "...")[...]`) for two-part mock exams and past paper walkthroughs.
 
 ### Pedagogical Callouts
 

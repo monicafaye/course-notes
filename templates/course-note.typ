@@ -722,3 +722,190 @@
   v(0.4em, weak: true)
 }
 
+// -----------------------------------------------------------------------------
+// 5. Exam Prep & Cheat Sheet Wrappers (`exams/*.typ`)
+// -----------------------------------------------------------------------------
+
+// 5.1 Compact Multi-Column Cheat Sheet Wrapper
+#let cheatsheet(
+  course-code: "COURSE-101",
+  course-name: "Course Title",
+  title: "Formula & Concept Cheat Sheet",
+  subtitle: none,
+  cols: 2,
+  body,
+) = {
+  set document(title: course-code + " — " + title)
+  set page(
+    paper: "a4",
+    margin: (top: 1.2cm, bottom: 1.2cm, left: 1.2cm, right: 1.2cm),
+    header: none,
+    footer: context {
+      set text(font: font-sans, size: 7.5pt, fill: palette.muted)
+      align(center, counter(page).display("1"))
+    },
+  )
+
+  set text(font: font-serif, size: 8.8pt, fill: palette.ink, lang: "en")
+  set par(justify: true, leading: 0.52em, spacing: 0.65em)
+  set list(indent: 4pt, body-indent: 4pt, spacing: 0.45em)
+  set enum(indent: 4pt, body-indent: 4pt, spacing: 0.45em)
+
+  show heading: set text(font: font-sans, fill: palette.primary, weight: "bold")
+  show heading.where(level: 1): it => block(
+    width: 100%,
+    fill: palette.primary,
+    inset: (x: 6pt, y: 3.5pt),
+    radius: 2.5pt,
+    above: 0.7em,
+    below: 0.45em,
+    sticky: true,
+    text(size: 9.2pt, weight: "bold", fill: white, it.body),
+  )
+  show heading.where(level: 2): it => block(
+    above: 0.55em,
+    below: 0.3em,
+    sticky: true,
+    text(size: 8.8pt, weight: "bold", fill: palette.primary, it.body),
+  )
+
+  block(width: 100%, breakable: false)[
+    #set text(font: font-sans)
+    #grid(
+      columns: (1fr, auto),
+      align: (left + bottom, right + bottom),
+      [
+        #text(size: 14pt, weight: "bold", fill: palette.primary, title)
+        #if subtitle != none [
+          #h(6pt)
+          #text(size: 9pt, fill: palette.muted, "— " + subtitle)
+        ]
+      ],
+      text(size: 8.5pt, weight: "bold", fill: palette.muted, course-code + " · " + course-name),
+    )
+    #v(0.25em)
+    #line(length: 100%, stroke: 1pt + palette.primary)
+  ]
+  v(0.35em)
+
+  columns(cols, gutter: 10pt, body)
+}
+
+// 5.2 Compact Card for Cheat Sheets
+#let cheat-card(title: none, body) = {
+  v(0.3em, weak: true)
+  block(
+    width: 100%,
+    fill: palette.surface,
+    stroke: 0.6pt + palette.border,
+    radius: 3pt,
+    inset: (x: 7pt, y: 5.5pt),
+    breakable: true,
+    [
+      #if title != none [
+        #block(breakable: false, sticky: true)[
+          #text(font: font-sans, size: 8.5pt, weight: "bold", fill: palette.primary, title)
+          #v(0.15em)
+          #line(length: 100%, stroke: 0.4pt + palette.border)
+          #v(0.2em)
+        ]
+      ]
+      #body
+    ]
+  )
+  v(0.3em, weak: true)
+}
+
+// 5.3 Practice / Past Exam Paper Wrapper
+#let exam-paper(
+  course-code: "COURSE-101",
+  course-name: "Course Title",
+  title: "Practice Exam",
+  subtitle: none,
+  body,
+) = {
+  set document(title: course-code + " — " + title)
+  set page(
+    paper: "a4",
+    margin: (top: 2.0cm, bottom: 2.0cm, left: 2.0cm, right: 2.0cm),
+    header: none,
+    footer: context {
+      set text(font: font-sans, size: 8.5pt, fill: palette.muted)
+      align(center, counter(page).display("1"))
+    },
+  )
+
+  show: _apply-base-styles
+  set heading(numbering: none)
+
+  block(width: 100%, breakable: false)[
+    #set text(font: font-sans)
+    #text(size: 18pt, weight: "bold", fill: palette.primary, title)
+    #if subtitle != none [
+      #v(0.2em)
+      #text(size: 10.5pt, fill: palette.muted, subtitle)
+    ]
+    #v(0.35em)
+    #line(length: 100%, stroke: 1pt + palette.primary)
+  ]
+  v(0.5em)
+
+  body
+}
+
+// 5.4 Exam Problem & Worked Solution Callouts
+#let problem(number: 1, title: none, points: none, body) = {
+  v(0.55em, weak: true)
+  block(
+    width: 100%,
+    fill: palette.surface,
+    stroke: (left: 3.5pt + palette.primary, rest: 0.6pt + palette.border),
+    radius: (right: 4pt, left: 1pt),
+    inset: (x: 12pt, y: 10pt),
+    breakable: true,
+    [
+      #block(breakable: false, sticky: true)[
+        #set text(font: font-sans)
+        #grid(
+          columns: (1fr, auto),
+          align: (left + horizon, right + horizon),
+          [
+            #box(
+              fill: palette.primary,
+              radius: 2.5pt,
+              inset: (x: 6pt, y: 2.5pt),
+              text(size: 8pt, weight: "bold", tracking: 0.5pt, fill: white, "PROBLEM " + str(number)),
+            )
+            #if title != none [
+              #h(6pt)
+              #text(size: 10pt, weight: "bold", fill: palette.primary, title)
+            ]
+          ],
+          if points != none {
+            box(
+              fill: palette.primary-light,
+              stroke: 0.5pt + palette.primary-border,
+              radius: 2.5pt,
+              inset: (x: 6pt, y: 2pt),
+              text(size: 8pt, weight: "bold", fill: palette.primary, str(points) + " pts"),
+            )
+          },
+        )
+      ]
+      #v(0.35em)
+      #body
+    ]
+  )
+  v(0.55em, weak: true)
+}
+
+#let solution(number: 1, title: none, body) = _callout-box(
+  badge: "Solution " + str(number),
+  title: title,
+  fg: palette.intuition,
+  bg: palette.intuition-light,
+  border: palette.intuition-border,
+  body,
+)
+
+

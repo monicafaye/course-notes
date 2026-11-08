@@ -1,0 +1,16 @@
+# Ignore individual course repositories (each course under courses/<course-code>/ is its own Git repo)
+courses/*
+!courses/starter-course/
+
+# Ignore raw course slide files inside starter-course
+courses/starter-course/slides/*
+!courses/starter-course/slides/.gitkeep
+!courses/starter-course/slides/README.md
+
+# OS and Editor artifacts
+.DS_Store
+Thumbs.db
+*.tmp
+*~
+.vscode/
+.idea/

@@ -1,0 +1,12 @@
+# Ignore raw course slide decks (large binary PDFs, PPTXs, keynote, images)
+slides/*
+!slides/.gitkeep
+!slides/README.md
+
+# OS and Editor artifacts
+.DS_Store
+Thumbs.db
+*.tmp
+*~
+.vscode/
+.idea/
